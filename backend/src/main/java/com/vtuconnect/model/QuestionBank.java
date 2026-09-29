@@ -46,6 +46,13 @@ public class QuestionBank {
     public String getQuestionText() { return questionText; }
     public void setQuestionText(String questionText) { this.questionText = questionText; }
 
+    public String getTitle() { return questionText != null ? questionText : ""; }
+    public void setTitle(String title) {
+        if (title != null && !title.isBlank()) {
+            this.questionText = title;
+        }
+    }
+
     public String getAnswerText() { return answerText; }
     public void setAnswerText(String answerText) { this.answerText = answerText; }
 

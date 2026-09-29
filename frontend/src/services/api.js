@@ -230,7 +230,26 @@ export const api = {
     getById: async (id) => {
       const res = await request(`/question-banks/${id}`);
       return res.data;
-    }
+    },
+    download: async (id, title = 'VTU_Question_Bank') => {
+      try {
+        const res = await fetch(`${API_BASE}/question-banks/${id}/download`);
+        if (!res.ok) throw new Error('Download failed');
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `${title.replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        window.open(`${API_BASE}/question-banks/${id}/download`, '_blank');
+      }
+    },
+    getViewUrl: (id) => `${API_BASE}/question-banks/${id}/view`,
+    getDownloadUrl: (id) => `${API_BASE}/question-banks/${id}/download`
   },
 
   // Previous Papers
@@ -503,6 +522,13 @@ export const api = {
       const res = await request('/admin/question-banks', {
         method: 'POST',
         body: JSON.stringify(data)
+      });
+      return res.data;
+    },
+    uploadQuestionBankPdf: async (formData) => {
+      const res = await request('/admin/question-banks', {
+        method: 'POST',
+        body: formData
       });
       return res.data;
     },
