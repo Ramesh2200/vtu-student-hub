@@ -35,11 +35,29 @@ public class AdminSemesterServlet extends HttpServlet {
             Long adminId = AuthFilter.getAuthenticatedUserId(req);
             String ip = req.getRemoteAddr();
 
-            Semester s = JsonUtil.parseRequestBody(req, Semester.class);
-            if (s == null || s.getName() == null) {
+            com.google.gson.JsonObject json = JsonUtil.parseRequestBody(req, com.google.gson.JsonObject.class);
+            if (json == null) {
                 JsonUtil.sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "Semester details required", "BAD_REQUEST");
                 return;
             }
+
+            int semNum = json.has("semesterNumber") && !json.get("semesterNumber").isJsonNull()
+                    ? json.get("semesterNumber").getAsInt()
+                    : (json.has("number") && !json.get("number").isJsonNull() ? json.get("number").getAsInt() : 1);
+
+            String name = json.has("name") && !json.get("name").isJsonNull()
+                    ? json.get("name").getAsString()
+                    : "Semester " + semNum;
+
+            String desc = json.has("description") && !json.get("description").isJsonNull() ? json.get("description").getAsString() : "";
+            String scheme = json.has("scheme") && !json.get("scheme").isJsonNull() ? json.get("scheme").getAsString() : "2022 Scheme CBCS";
+
+            Semester s = new Semester();
+            s.setSemesterNumber(semNum);
+            s.setName(name);
+            s.setDescription(desc);
+            s.setScheme(scheme);
+            s.setActive(true);
 
             Semester created = adminService.createSemester(s, adminId, ip);
             JsonUtil.sendCreated(resp, "Semester created successfully", created);

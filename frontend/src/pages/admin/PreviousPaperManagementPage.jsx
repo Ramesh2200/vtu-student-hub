@@ -12,7 +12,7 @@ export const PreviousPaperManagementPage = () => {
     subjectId: '',
     title: '',
     examYear: 2025,
-    examType: 'REGULAR',
+    examType: 'SEE Regular',
     description: ''
   });
 
@@ -45,7 +45,7 @@ export const PreviousPaperManagementPage = () => {
       const created = await api.admin.createPreviousPaper(newPaper);
       setPapers((prev) => [...prev, created]);
       setShowModal(false);
-      setNewPaper({ subjectId: subjects[0]?.id || '', title: '', examYear: 2025, examType: 'REGULAR', description: '' });
+      setNewPaper({ subjectId: subjects[0]?.id || '', title: '', examYear: 2025, examType: 'SEE Regular', description: '' });
     } catch (err) {
       alert(err.message || 'Failed to create question paper record');
     }
@@ -209,9 +209,9 @@ export const PreviousPaperManagementPage = () => {
                       onChange={(e) => setNewPaper({ ...newPaper, examType: e.target.value })}
                       style={{ width: '100%', background: '#0B1020', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '10px', color: '#FFF' }}
                     >
-                      <option value="REGULAR">Regular SEE</option>
-                      <option value="SUPPLEMENTARY">Supplementary</option>
-                      <option value="SPECIAL">Special SEE</option>
+                      <option value="SEE Regular">Regular SEE</option>
+                      <option value="SEE Supplementary">Supplementary</option>
+                      <option value="Make-up Exam">Make-up Exam</option>
                     </select>
                   </div>
                 </div>

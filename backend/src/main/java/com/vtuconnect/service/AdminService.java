@@ -73,6 +73,12 @@ public class AdminService {
         return ok;
     }
 
+    public boolean replacePaperFile(Long paperId, String fileName, String filePath, long fileSize, Long adminId, String ip) throws SQLException {
+        boolean ok = previousPaperDAO.replaceFile(paperId, fileName, filePath, fileSize);
+        auditLogDAO.log(adminId, "PAPER_FILE_REPLACE", "PAPER", paperId, "Replaced PDF file: " + fileName, ip);
+        return ok;
+    }
+
     public boolean deleteNote(Long noteId, Long adminId, String ip) throws SQLException {
         boolean ok = notesDAO.delete(noteId);
         auditLogDAO.log(adminId, "NOTE_DELETE", "NOTE", noteId, "Deleted note ID: " + noteId, ip);

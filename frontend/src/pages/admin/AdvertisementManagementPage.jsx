@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Megaphone, Plus, Trash2, ExternalLink } from 'lucide-react';
+import { Megaphone, Plus, Trash2, Edit2, X } from 'lucide-react';
 import { api } from '../../services/api';
 import { AdminLayout } from './AdminLayout';
 
@@ -7,6 +7,7 @@ export const AdvertisementManagementPage = () => {
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editAd, setEditAd] = useState(null);
   const [newAd, setNewAd] = useState({
     title: '',
     description: '',
@@ -36,12 +37,45 @@ export const AdvertisementManagementPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const created = await api.admin.createAd(newAd);
-      setAds((prev) => [...prev, created]);
-      setShowModal(false);
-      setNewAd({ title: '', description: '', imageUrl: '', targetUrl: '', startDate: '2026-09-01', endDate: '2026-12-31', active: true });
+      if (editAd) {
+        await api.admin.updateAd(editAd.id, newAd);
+        setAds((prev) => prev.map((a) => (a.id === editAd.id ? { ...a, ...newAd } : a)));
+      } else {
+        const created = await api.admin.createAd(newAd);
+        setAds((prev) => [...prev, created]);
+      }
+      closeModal();
     } catch (err) {
-      alert(err.message || 'Failed to create advertisement');
+      alert(err.message || 'Failed to save advertisement');
+    }
+  };
+
+  const openEdit = (ad) => {
+    setEditAd(ad);
+    setNewAd({
+      title: ad.title || '',
+      description: ad.description || '',
+      imageUrl: ad.imageUrl || '',
+      targetUrl: ad.targetUrl || '',
+      startDate: ad.startDate || '2026-09-01',
+      endDate: ad.endDate || '2026-12-31',
+      active: ad.active !== false
+    });
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setEditAd(null);
+    setNewAd({ title: '', description: '', imageUrl: '', targetUrl: '', startDate: '2026-09-01', endDate: '2026-12-31', active: true });
+  };
+
+  const handleToggleActive = async (ad) => {
+    try {
+      await api.admin.updateAd(ad.id, { ...ad, active: !ad.active });
+      setAds((prev) => prev.map((a) => (a.id === ad.id ? { ...a, active: !ad.active } : a)));
+    } catch (err) {
+      alert(err.message || 'Failed to toggle status');
     }
   };
 
@@ -133,12 +167,26 @@ export const AdvertisementManagementPage = () => {
                     </span>
                   </td>
                   <td style={{ padding: '16px 20px', textAlign: 'right' }}>
-                    <button
-                      onClick={() => handleDelete(ad.id)}
-                      style={{ background: 'rgba(239, 68, 68, 0.15)', border: 'none', color: '#F87171', padding: '6px 8px', borderRadius: '6px', cursor: 'pointer' }}
-                    >
-                      <Trash2 size={14} />
-                    </button>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>
+                      <button
+                        onClick={() => handleToggleActive(ad)}
+                        style={{ background: ad.active ? 'rgba(245, 158, 11, 0.12)' : 'rgba(52,211,153,0.12)', border: `1px solid ${ad.active ? 'rgba(245,158,11,0.3)' : 'rgba(52,211,153,0.3)'}`, color: ad.active ? '#FBBF24' : '#34D399', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: '700' }}
+                      >
+                        {ad.active ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button
+                        onClick={() => openEdit(ad)}
+                        style={{ background: 'rgba(167, 139, 250, 0.12)', border: '1px solid rgba(167, 139, 250, 0.25)', color: '#A78BFA', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600' }}
+                      >
+                        <Edit2 size={13} /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(ad.id)}
+                        style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#F87171', padding: '6px 8px', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -173,9 +221,14 @@ export const AdvertisementManagementPage = () => {
                 padding: '28px'
               }}
             >
-              <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 16px 0' }}>
-                Add Promotional Sponsorship
-              </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: 0 }}>
+                  {editAd ? 'Edit Advertisement' : 'Add Promotional Sponsorship'}
+                </h3>
+                <button onClick={closeModal} style={{ background: 'transparent', border: 'none', color: '#64748B', cursor: 'pointer' }}>
+                  <X size={20} />
+                </button>
+              </div>
 
               <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div>
@@ -216,7 +269,7 @@ export const AdvertisementManagementPage = () => {
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
                   <button
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={closeModal}
                     style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#94A3B8', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}
                   >
                     Cancel
@@ -225,7 +278,7 @@ export const AdvertisementManagementPage = () => {
                     type="submit"
                     style={{ background: '#EF4444', border: 'none', color: '#FFF', padding: '8px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer' }}
                   >
-                    Save Advertisement
+                    {editAd ? 'Update Advertisement' : 'Save Advertisement'}
                   </button>
                 </div>
               </form>

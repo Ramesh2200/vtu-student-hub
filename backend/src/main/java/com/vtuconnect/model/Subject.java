@@ -7,7 +7,10 @@ public class Subject {
     private int semesterId;
     private String subjectCode;
     private String subjectName;
+    private String code;
+    private String name;
     private String branch;
+    private String department;
     private String scheme;
     private int credits;
     private String description;
@@ -26,14 +29,53 @@ public class Subject {
     public int getSemesterId() { return semesterId; }
     public void setSemesterId(int semesterId) { this.semesterId = semesterId; }
 
-    public String getSubjectCode() { return subjectCode; }
-    public void setSubjectCode(String subjectCode) { this.subjectCode = subjectCode; }
+    public String getSubjectCode() { 
+        return subjectCode != null ? subjectCode : code; 
+    }
+    public void setSubjectCode(String subjectCode) { 
+        this.subjectCode = subjectCode; 
+        this.code = subjectCode;
+    }
 
-    public String getSubjectName() { return subjectName; }
-    public void setSubjectName(String subjectName) { this.subjectName = subjectName; }
+    public String getCode() { 
+        return code != null ? code : subjectCode; 
+    }
+    public void setCode(String code) { 
+        this.code = code; 
+        this.subjectCode = code;
+    }
 
-    public String getBranch() { return branch; }
-    public void setBranch(String branch) { this.branch = branch; }
+    public String getSubjectName() { 
+        return subjectName != null ? subjectName : name; 
+    }
+    public void setSubjectName(String subjectName) { 
+        this.subjectName = subjectName; 
+        this.name = subjectName;
+    }
+
+    public String getName() { 
+        return name != null ? name : subjectName; 
+    }
+    public void setName(String name) { 
+        this.name = name; 
+        this.subjectName = name;
+    }
+
+    public String getBranch() { 
+        return branch != null ? branch : department; 
+    }
+    public void setBranch(String branch) { 
+        this.branch = branch; 
+        this.department = branch;
+    }
+
+    public String getDepartment() { 
+        return department != null ? department : branch; 
+    }
+    public void setDepartment(String department) { 
+        this.department = department; 
+        this.branch = department;
+    }
 
     public String getScheme() { return scheme; }
     public void setScheme(String scheme) { this.scheme = scheme; }

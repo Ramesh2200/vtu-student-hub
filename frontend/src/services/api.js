@@ -706,6 +706,35 @@ export const api = {
     deleteSubject: async (id) => {
       const res = await request(`/admin/subjects/${id}`, { method: 'DELETE' });
       return res.data;
+    },
+
+    // Get all subjects (used in notes upload, paper upload, subject management)
+    getSubjects: async (semesterId) => {
+      const q = semesterId ? `?semesterId=${semesterId}` : '';
+      const res = await request(`/admin/subjects${q}`);
+      return res.data || [];
+    },
+
+    // Alias: uploadNote → uploadNotePdf (for NotesPdfUploadPage)
+    uploadNote: async (formData) => {
+      const res = await request('/admin/notes', {
+        method: 'POST',
+        body: formData
+      });
+      return res.data;
+    },
+
+    // Previous Papers CRUD (used in PreviousPaperManagementPage)
+    createPreviousPaper: async (data) => {
+      const res = await request('/admin/previous-papers', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+      return res.data;
+    },
+    deletePreviousPaper: async (id) => {
+      const res = await request(`/admin/previous-papers/${id}`, { method: 'DELETE' });
+      return res.data;
     }
   }
 };

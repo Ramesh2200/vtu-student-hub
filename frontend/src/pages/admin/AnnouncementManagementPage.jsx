@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BellRing, Plus, Trash2 } from 'lucide-react';
+import { BellRing, Plus, Trash2, Edit2, X } from 'lucide-react';
 import { api } from '../../services/api';
 import { AdminLayout } from './AdminLayout';
 
@@ -7,6 +7,7 @@ export const AnnouncementManagementPage = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editAnn, setEditAnn] = useState(null); // null = create mode, object = edit mode
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
@@ -29,14 +30,42 @@ export const AnnouncementManagementPage = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const created = await api.admin.createAnnouncement({ title, content });
-      setAnnouncements((prev) => [created, ...prev]);
-      setShowModal(false);
-      setTitle('');
-      setContent('');
+      if (editAnn) {
+        // Update existing
+        await api.admin.updateAnnouncement(editAnn.id, { title, content });
+        setAnnouncements((prev) =>
+          prev.map((a) => (a.id === editAnn.id ? { ...a, title, content } : a))
+        );
+      } else {
+        // Create new
+        const created = await api.admin.createAnnouncement({ title, content });
+        setAnnouncements((prev) => [created, ...prev]);
+      }
+      closeModal();
     } catch (err) {
-      alert(err.message || 'Failed to create announcement');
+      alert(err.message || 'Failed to save announcement');
     }
+  };
+
+  const openCreate = () => {
+    setEditAnn(null);
+    setTitle('');
+    setContent('');
+    setShowModal(true);
+  };
+
+  const openEdit = (ann) => {
+    setEditAnn(ann);
+    setTitle(ann.title || '');
+    setContent(ann.content || '');
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setEditAnn(null);
+    setTitle('');
+    setContent('');
   };
 
   const handleDelete = async (id) => {
@@ -64,7 +93,7 @@ export const AnnouncementManagementPage = () => {
           </div>
 
           <button
-            onClick={() => setShowModal(true)}
+            onClick={openCreate}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -123,13 +152,22 @@ export const AnnouncementManagementPage = () => {
                   </p>
                 </div>
 
-                <button
-                  onClick={() => handleDelete(ann.id)}
-                  style={{ background: 'rgba(239, 68, 68, 0.15)', border: 'none', color: '#F87171', padding: '8px', borderRadius: '8px', cursor: 'pointer', flexShrink: 0 }}
-                  title="Delete circular"
-                >
-                  <Trash2 size={16} />
-                </button>
+                <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                  <button
+                    onClick={() => openEdit(ann)}
+                    style={{ background: 'rgba(167, 139, 250, 0.12)', border: '1px solid rgba(167, 139, 250, 0.25)', color: '#A78BFA', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: '600' }}
+                    title="Edit announcement"
+                  >
+                    <Edit2 size={13} /> Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(ann.id)}
+                    style={{ background: 'rgba(239, 68, 68, 0.15)', border: 'none', color: '#F87171', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}
+                    title="Delete circular"
+                  >
+                    <Trash2 size={13} /> Delete
+                  </button>
+                </div>
               </div>
             ))
           )}
@@ -162,10 +200,14 @@ export const AnnouncementManagementPage = () => {
                 padding: '28px'
               }}
             >
-              <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 16px 0' }}>
-                Broadcast University Circular
-              </h3>
-
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: 0 }}>
+                  {editAnn ? 'Edit Announcement' : 'Broadcast University Circular'}
+                </h3>
+                <button onClick={closeModal} style={{ background: 'transparent', border: 'none', color: '#64748B', cursor: 'pointer' }}>
+                  <X size={20} />
+                </button>
+              </div>
               <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div>
                   <label style={{ fontSize: '12px', fontWeight: '700', color: '#CBD5E1', display: 'block', marginBottom: '4px' }}>Circular Headline *</label>
@@ -194,7 +236,7 @@ export const AnnouncementManagementPage = () => {
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
                   <button
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={closeModal}
                     style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#94A3B8', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}
                   >
                     Cancel
@@ -203,7 +245,7 @@ export const AnnouncementManagementPage = () => {
                     type="submit"
                     style={{ background: '#EF4444', border: 'none', color: '#FFF', padding: '8px 20px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer' }}
                   >
-                    Publish Circular
+                    {editAnn ? 'Update Circular' : 'Publish Circular'}
                   </button>
                 </div>
               </form>
