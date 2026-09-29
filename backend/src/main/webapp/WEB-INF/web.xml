@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>Student Connect - VTU Student Connect</display-name>
+
+    <!-- Filters -->
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.vtuconnect.filter.CorsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.vtuconnect.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/api/profile/*</url-pattern>
+        <url-pattern>/api/bookmarks/*</url-pattern>
+        <url-pattern>/api/downloads/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>com.vtuconnect.filter.AdminFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/api/admin/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Authentication Servlets -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/api/auth/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.RegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/api/auth/register</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/api/auth/logout</url-pattern>
+    </servlet-mapping>
+
+    <!-- Student & Academic Servlets -->
+    <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.ProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/api/profile</url-pattern>
+        <url-pattern>/api/profile/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SemesterServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.SemesterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SemesterServlet</servlet-name>
+        <url-pattern>/api/semesters</url-pattern>
+        <url-pattern>/api/semesters/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SubjectServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.SubjectServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SubjectServlet</servlet-name>
+        <url-pattern>/api/subjects</url-pattern>
+        <url-pattern>/api/subjects/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NotesServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.NotesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotesServlet</servlet-name>
+        <url-pattern>/api/notes</url-pattern>
+        <url-pattern>/api/notes/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>QuestionBankServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.QuestionBankServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>QuestionBankServlet</servlet-name>
+        <url-pattern>/api/question-banks</url-pattern>
+        <url-pattern>/api/question-banks/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PreviousPaperServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.PreviousPaperServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PreviousPaperServlet</servlet-name>
+        <url-pattern>/api/previous-papers</url-pattern>
+        <url-pattern>/api/previous-papers/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PlacementServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.PlacementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PlacementServlet</servlet-name>
+        <url-pattern>/api/placements</url-pattern>
+        <url-pattern>/api/placements/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ChatServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.ChatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChatServlet</servlet-name>
+        <url-pattern>/api/chat/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdvertisementServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdvertisementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdvertisementServlet</servlet-name>
+        <url-pattern>/api/advertisements</url-pattern>
+        <url-pattern>/api/advertisements/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NotificationServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.NotificationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificationServlet</servlet-name>
+        <url-pattern>/api/notifications</url-pattern>
+        <url-pattern>/api/notifications/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AnnouncementServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AnnouncementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AnnouncementServlet</servlet-name>
+        <url-pattern>/api/announcements</url-pattern>
+        <url-pattern>/api/announcements/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>BookmarkServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.BookmarkServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BookmarkServlet</servlet-name>
+        <url-pattern>/api/bookmarks</url-pattern>
+        <url-pattern>/api/bookmarks/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.DownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/api/downloads</url-pattern>
+        <url-pattern>/api/downloads/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GlobalSearchServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.GlobalSearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GlobalSearchServlet</servlet-name>
+        <url-pattern>/api/search</url-pattern>
+    </servlet-mapping>
+
+    <!-- Admin Servlets -->
+    <servlet>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <url-pattern>/api/admin/stats</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminNotesServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminNotesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminNotesServlet</servlet-name>
+        <url-pattern>/api/admin/notes</url-pattern>
+        <url-pattern>/api/admin/notes/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminQuestionBankServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminQuestionBankServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminQuestionBankServlet</servlet-name>
+        <url-pattern>/api/admin/question-banks</url-pattern>
+        <url-pattern>/api/admin/question-banks/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminPreviousPaperServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminPreviousPaperServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminPreviousPaperServlet</servlet-name>
+        <url-pattern>/api/admin/previous-papers</url-pattern>
+        <url-pattern>/api/admin/previous-papers/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminPlacementServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminPlacementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminPlacementServlet</servlet-name>
+        <url-pattern>/api/admin/placements</url-pattern>
+        <url-pattern>/api/admin/placements/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminAdvertisementServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminAdvertisementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminAdvertisementServlet</servlet-name>
+        <url-pattern>/api/admin/advertisements</url-pattern>
+        <url-pattern>/api/admin/advertisements/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminAnnouncementServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminAnnouncementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminAnnouncementServlet</servlet-name>
+        <url-pattern>/api/admin/announcements</url-pattern>
+        <url-pattern>/api/admin/announcements/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <url-pattern>/api/admin/users</url-pattern>
+        <url-pattern>/api/admin/users/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminChatServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminChatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminChatServlet</servlet-name>
+        <url-pattern>/api/admin/chat/reports</url-pattern>
+        <url-pattern>/api/admin/chat/reports/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminAuditServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminAuditServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminAuditServlet</servlet-name>
+        <url-pattern>/api/admin/audit-logs</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminSemesterServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminSemesterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminSemesterServlet</servlet-name>
+        <url-pattern>/api/admin/semesters</url-pattern>
+        <url-pattern>/api/admin/semesters/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminSubjectServlet</servlet-name>
+        <servlet-class>com.vtuconnect.controller.AdminSubjectServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminSubjectServlet</servlet-name>
+        <url-pattern>/api/admin/subjects</url-pattern>
+        <url-pattern>/api/admin/subjects/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>60</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>false</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+</web-app>

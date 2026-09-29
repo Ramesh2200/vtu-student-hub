@@ -1,0 +1,70 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1153 >>
+stream
+BT
+/F1 18 Tf
+40 740 Td
+(VTU SEE July 2025: Machine Learning [BCS602] Solved) Tj
+0 -24 Td
+/F2 11 Tf
+(Visvesvaraya Technological University - Solved SEE Paper) Tj
+0 -30 Td
+/F2 10 Tf
+(--- VISVESVARAYA TECHNOLOGICAL UNIVERSITY BELAGAVI ---) Tj
+0 -18 Td
+(Sixth Semester B.E. Degree Examination, July 2025 - Machine Learning [BCS602]) Tj
+0 -18 Td
+(Time: 3 Hours  |  Max. Marks: 100  |  Scheme: 2022 CBCS) Tj
+0 -18 Td
+(--- MODULE 1: LINEAR REGRESSION ---) Tj
+0 -18 Td
+(Q1 [a] Derive Normal Equation for multivariate Linear Regression. [10M]) Tj
+0 -18 Td
+(     SOLVED: theta = inv[X^T * X] * X^T * y with matrix calculus proof.) Tj
+0 -18 Td
+(Q1 [b] Explain Overfitting vs Underfitting and role of L1/L2 regularization. [10M]) Tj
+0 -18 Td
+(--- MODULE 2: DECISION TREES ---) Tj
+0 -18 Td
+(Q2 [a] Given PlayTennis dataset, calculate Information Gain for Outlook attribute. [10M]) Tj
+0 -18 Td
+(     SOLVED: Entropy[S] = 0.940, Gain[S, Outlook] = 0.246. Outlook selected as root!) Tj
+0 -18 Td
+(Q2 [b] Explain AdaBoost ensemble algorithm with sample weight updates. [10M]) Tj
+0 -18 Td
+(Result: Complete solved answers verified by senior VTU evaluators.) Tj
+0 -18 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000001462 00000 n 
+0000001537 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1607
+%%EOF

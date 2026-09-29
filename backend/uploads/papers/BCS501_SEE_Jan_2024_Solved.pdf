@@ -1,0 +1,68 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1042 >>
+stream
+BT
+/F1 18 Tf
+40 740 Td
+(VTU SEE Jan 2024: Database Management [BCS501] Solved) Tj
+0 -24 Td
+/F2 11 Tf
+(Visvesvaraya Technological University - Solved Paper) Tj
+0 -30 Td
+/F2 10 Tf
+(--- VISVESVARAYA TECHNOLOGICAL UNIVERSITY BELAGAVI ---) Tj
+0 -18 Td
+(Fifth Semester B.E. Degree Examination, Jan 2024 - Database Management [BCS501]) Tj
+0 -18 Td
+(Time: 3 Hours  |  Max. Marks: 100  |  Scheme: 2022 CBCS) Tj
+0 -18 Td
+(--- MODULE 1: RELATIONAL ALGEBRA ---) Tj
+0 -18 Td
+(Q1 [a] Explain Entity Integrity and Referential Integrity with examples. [10M]) Tj
+0 -18 Td
+(Q1 [b] Write Relational Algebra queries for Company Schema. [10M]) Tj
+0 -18 Td
+(--- MODULE 2: NORMALIZATION ---) Tj
+0 -18 Td
+(Q2 [a] Prove why every relation in BCNF is also in 3NF, but not vice-versa. [10M]) Tj
+0 -18 Td
+(     SOLVED: Proof using functional dependency X -> A and candidate key analysis.) Tj
+0 -18 Td
+(Q2 [b] Decompose Relation R[A,B,C,D,E] into 3NF preserving dependencies. [10M]) Tj
+0 -18 Td
+(Result: Complete faculty-evaluated solutions with diagrams.) Tj
+0 -18 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000001351 00000 n 
+0000001426 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1496
+%%EOF

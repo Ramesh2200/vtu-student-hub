@@ -1,0 +1,78 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1428 >>
+stream
+BT
+/F1 18 Tf
+40 740 Td
+(VTU SEE July 2025: Cloud Computing [BCS601] Solved) Tj
+0 -24 Td
+/F2 11 Tf
+(Visvesvaraya Technological University - Final Examination) Tj
+0 -30 Td
+/F2 10 Tf
+(--- VISVESVARAYA TECHNOLOGICAL UNIVERSITY BELAGAVI ---) Tj
+0 -18 Td
+(Sixth Semester B.E. Degree Examination, July 2025 - Cloud Computing [BCS601]) Tj
+0 -18 Td
+(Time: 3 Hours  |  Max. Marks: 100  |  Scheme: 2022 CBCS) Tj
+0 -18 Td
+(--- MODULE 1 ---) Tj
+0 -18 Td
+(Q1 [a] Explain NIST cloud model with 5 characteristics and 3 service models. [10M]) Tj
+0 -18 Td
+(     SOLVED: Comprehensive formulation of On-demand self-service, Broad network access,) Tj
+0 -18 Td
+(     Resource pooling, Rapid elasticity, Measured service with architecture diagram.) Tj
+0 -18 Td
+(Q1 [b] Differentiate Type 1 and Type 2 Hypervisors with pros and cons. [10M]) Tj
+0 -18 Td
+(--- MODULE 2 ---) Tj
+0 -18 Td
+(Q2 [a] Explain Hadoop Distributed File System [HDFS] architecture. [10M]) Tj
+0 -18 Td
+(     SOLVED: Master/Slave setup, NameNode namespace management, DataNode block storage.) Tj
+0 -18 Td
+(Q2 [b] Describe S3 bucket security, ACLs, and bucket policies. [10M]) Tj
+0 -18 Td
+(--- MODULE 3 ---) Tj
+0 -18 Td
+(Q3 [a] Explain Docker container engine components and container lifecycle. [10M]) Tj
+0 -18 Td
+(Q3 [b] Describe Kubernetes Pod architecture, kubelet, and kube-proxy. [10M]) Tj
+0 -18 Td
+(Result: Full 100-mark step-by-step verified faculty solutions.) Tj
+0 -18 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000001737 00000 n 
+0000001812 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1882
+%%EOF

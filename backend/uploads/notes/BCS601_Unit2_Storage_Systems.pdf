@@ -1,0 +1,64 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 942 >>
+stream
+BT
+/F1 18 Tf
+40 740 Td
+(Cloud Computing: Unit 2 Storage and Distributed Systems) Tj
+0 -24 Td
+/F2 11 Tf
+(VTU 2022 Scheme CBCS - BCS601 Module 2) Tj
+0 -30 Td
+/F2 10 Tf
+(--- MODULE OVERVIEW & LEARNING OBJECTIVES ---) Tj
+0 -18 Td
+(1. Cloud Storage Architecture: Block Storage vs Object Storage vs File Storage) Tj
+0 -18 Td
+(2. Amazon Simple Storage Service [S3]: Buckets, Keys, and Lifecycle Policies) Tj
+0 -18 Td
+(3. Google File System [GFS]: Master node architecture, Chunkservers, and Replication) Tj
+0 -18 Td
+(4. Hadoop Distributed File System [HDFS]: NameNode, DataNode, and Heartbeat mechanism) Tj
+0 -18 Td
+(5. Consistency Models in Distributed Cloud Storage: Strong vs Eventual Consistency) Tj
+0 -18 Td
+(--- IMPORTANT VTU 10-MARK QUESTIONS ---) Tj
+0 -18 Td
+(Q1. Explain HDFS architecture and data read/write workflow in detail [10 Marks]) Tj
+0 -18 Td
+(Q2. Compare GFS and HDFS architecture with schematic diagram [10 Marks]) Tj
+0 -18 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000001250 00000 n 
+0000001325 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1395
+%%EOF

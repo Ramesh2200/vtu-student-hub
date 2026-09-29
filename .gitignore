@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Production build outputs
+dist/
+dist-ssr/
+frontend/dist/
+frontend/dist-ssr/
+
+# Java & Maven targets
+target/
+backend/target/
+*.class
+*.war
+*.jar
+
+# Vercel deployment files
+.vercel/
+frontend/.vercel/
+
+# Logs & debuggers
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# System & IDE files
+.DS_Store
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local environment variables
+.env.local
+.env.*.local
+
+# Tomcat runtime work directories
+backend/work/
+backend/temp/

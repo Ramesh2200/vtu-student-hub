@@ -1,0 +1,70 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1065 >>
+stream
+BT
+/F1 18 Tf
+40 740 Td
+(VTU SEE Dec 2024: Computer Networks [BCS603] Paper) Tj
+0 -24 Td
+/F2 11 Tf
+(Visvesvaraya Technological University - SEE Examination) Tj
+0 -30 Td
+/F2 10 Tf
+(--- VISVESVARAYA TECHNOLOGICAL UNIVERSITY BELAGAVI ---) Tj
+0 -18 Td
+(Sixth Semester B.E. Degree Examination, Dec 2024 - Computer Networks [BCS603]) Tj
+0 -18 Td
+(Time: 3 Hours  |  Max. Marks: 100  |  Scheme: 2022 CBCS) Tj
+0 -18 Td
+(--- MODULE 1 ---) Tj
+0 -18 Td
+(1. [a] Draw and explain IPv4 Datagram header format in detail. [10M]) Tj
+0 -18 Td
+(   [b] Explain the operation of ARP and DHCP protocols. [10M]) Tj
+0 -18 Td
+(--- MODULE 2 ---) Tj
+0 -18 Td
+(2. [a] What is Count-to-Infinity problem in Distance Vector routing? How to prevent it? [10M]) Tj
+0 -18 Td
+(   [b] Apply Dijkstra algorithm to find shortest path from source router A. [10M]) Tj
+0 -18 Td
+(--- MODULE 3 ---) Tj
+0 -18 Td
+(3. [a] Explain TCP 3-way handshake connection establishment and teardown. [10M]) Tj
+0 -18 Td
+(   [b] Describe TCP Congestion Control mechanisms: Slow Start, AIMD, Fast Recovery. [10M]) Tj
+0 -18 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000001374 00000 n 
+0000001449 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1519
+%%EOF
