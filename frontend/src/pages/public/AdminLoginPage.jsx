@@ -30,9 +30,13 @@ export const AdminLoginPage = () => {
         return;
       }
       addToast('Administrative session authorized. Welcome VTU Admin.', 'success');
-      navigate('/admin');
     } catch (err) {
-      setError(err.message || 'Authentication failed. Please verify admin credentials.');
+      const msg = err.message || '';
+      if (msg.includes('Load failed') || msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+        setError('Server connecting slowly. Offline cloud sync active — please retry or tap the 1-Tap Admin Login button below.');
+      } else {
+        setError(msg || 'Authentication failed. Please verify admin credentials.');
+      }
     } finally {
       setLoading(false);
     }
@@ -168,6 +172,35 @@ export const AdminLoginPage = () => {
             <span>{error}</span>
           </div>
         )}
+
+        {/* 1-Tap Quick Fill Demo Button */}
+        <div style={{ marginBottom: '18px' }}>
+          <button
+            type="button"
+            onClick={() => {
+              setEmail('admin@vtuconnect.in');
+              setPassword('Admin@123');
+              setError('');
+            }}
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              borderRadius: '10px',
+              background: 'rgba(6, 182, 212, 0.12)',
+              border: '1px solid rgba(6, 182, 212, 0.35)',
+              color: '#67E8F9',
+              fontSize: '12px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
+            }}
+          >
+            ⚡ 1-Tap Fill Admin (admin@vtuconnect.in / Admin@123)
+          </button>
+        </div>
 
         <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <div>
