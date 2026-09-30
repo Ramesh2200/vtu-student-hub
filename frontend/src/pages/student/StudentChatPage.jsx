@@ -10,10 +10,37 @@ import {
   HelpCircle,
   AlertTriangle,
   RefreshCw,
-  CheckCircle
+  CheckCircle,
+  Code,
+  Database,
+  Layers,
+  Server,
+  Briefcase,
+  ShieldCheck,
+  GraduationCap
 } from 'lucide-react';
 import { api, authStorage } from '../../services/api';
 import { StudentLayout } from '../../components/StudentLayout';
+
+const renderRoomIcon = (iconName, color = '#38BDF8', size = 16) => {
+  switch (iconName) {
+    case 'Code':
+      return <Code size={size} color={color} />;
+    case 'Database':
+      return <Database size={size} color={color} />;
+    case 'Layers':
+      return <Layers size={size} color={color} />;
+    case 'Server':
+      return <Server size={size} color={color} />;
+    case 'Briefcase':
+      return <Briefcase size={size} color={color} />;
+    case 'HelpCircle':
+      return <HelpCircle size={size} color={color} />;
+    case 'MessageSquare':
+    default:
+      return <MessageSquare size={size} color={color} />;
+  }
+};
 
 export const StudentChatPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,6 +49,7 @@ export const StudentChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const [user, setUser] = useState(() => authStorage.getUser());
 
@@ -33,13 +61,14 @@ export const StudentChatPage = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
+    setUser(authStorage.getUser());
     loadRooms();
   }, []);
 
   useEffect(() => {
     if (activeRoom) {
       loadMessages(activeRoom.id);
-      // Polling every 4 seconds for real-time updates as requested
+      // Polling every 4 seconds for real-time peer discussion updates
       const interval = setInterval(() => {
         loadMessages(activeRoom.id, true);
       }, 4000);
@@ -51,11 +80,12 @@ export const StudentChatPage = () => {
     try {
       setLoading(true);
       const data = await api.chat.getRooms();
-      setRooms(data || []);
-      if (data && data.length > 0) {
+      const validRooms = Array.isArray(data) && data.length > 0 ? data : [];
+      setRooms(validRooms);
+      if (validRooms.length > 0) {
         const roomParam = searchParams.get('room');
-        const found = roomParam ? data.find((r) => r.slug === roomParam) : data[0];
-        setActiveRoom(found || data[0]);
+        const found = roomParam ? validRooms.find((r) => r.slug === roomParam) : validRooms[0];
+        setActiveRoom(found || validRooms[0]);
       }
     } catch (err) {
       console.error('Failed to load chat rooms:', err);
@@ -66,6 +96,7 @@ export const StudentChatPage = () => {
 
   const loadMessages = async (roomId, isPoll = false) => {
     try {
+      if (!isPoll) setLoadingMessages(true);
       const msgs = await api.chat.getMessages(roomId);
       setMessages(msgs || []);
       if (!isPoll) {
@@ -73,6 +104,8 @@ export const StudentChatPage = () => {
       }
     } catch (err) {
       console.error('Failed to load chat messages:', err);
+    } finally {
+      if (!isPoll) setLoadingMessages(false);
     }
   };
 
@@ -81,20 +114,31 @@ export const StudentChatPage = () => {
   };
 
   const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!newMessage.trim() || !activeRoom) return;
+    if (e && e.preventDefault) e.preventDefault();
+    const textToSend = newMessage.trim();
+    if (!textToSend || !activeRoom) return;
 
     try {
       setSending(true);
-      const sent = await api.chat.sendMessage(activeRoom.id, newMessage.trim());
+      const sent = await api.chat.sendMessage(activeRoom.id, textToSend);
       setNewMessage('');
-      setMessages((prev) => [...prev, sent]);
-      setTimeout(scrollToBottom, 50);
+      if (sent) {
+        setMessages((prev) => {
+          // Avoid duplicate by id
+          if (prev.some(m => m.id === sent.id)) return prev;
+          return [...prev, sent];
+        });
+      }
+      setTimeout(scrollToBottom, 60);
     } catch (err) {
       console.error('Send message failed:', err);
     } finally {
       setSending(false);
     }
+  };
+
+  const handleQuickPrompt = (promptText) => {
+    setNewMessage(promptText);
   };
 
   const handleReportSubmit = async (e) => {
@@ -114,34 +158,121 @@ export const StudentChatPage = () => {
     }
   };
 
+  const currentUserId = user?.id || (user?.email?.includes('admin') ? 1 : 2);
+
   return (
     <StudentLayout>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px', height: 'calc(100vh - 120px)' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px', height: 'calc(100vh - 110px)' }}>
         
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', flexShrink: 0 }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: '900', color: '#F8FAFC', margin: 0 }}>
-              Student Community Discussions
-            </h1>
-            <p style={{ fontSize: '13px', color: '#94A3B8', margin: '2px 0 0' }}>
-              Real-time peer chat & academic doubt resolution across VTU branches.
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <h1 style={{ fontSize: '22px', fontWeight: '900', color: '#F8FAFC', margin: 0, letterSpacing: '-0.02em' }}>
+                Student Community Discussions
+              </h1>
+              <span style={{ fontSize: '11px', background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', padding: '2px 8px', borderRadius: '6px', fontWeight: '700' }}>
+                7 Channels
+              </span>
+            </div>
+            <p style={{ fontSize: '13px', color: '#94A3B8', margin: '3px 0 0' }}>
+              Real-time peer chat & academic doubt resolution across all VTU engineering branches.
             </p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '6px 12px', borderRadius: '8px', color: '#34D399', fontSize: '12px', fontWeight: '700' }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-            Live Sync Active
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button
+              onClick={() => {
+                if (activeRoom) loadMessages(activeRoom.id);
+              }}
+              title="Refresh discussion feed"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                padding: '6px 10px',
+                borderRadius: '8px',
+                color: '#94A3B8',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '12px',
+                cursor: 'pointer'
+              }}
+            >
+              <RefreshCw size={13} className={loadingMessages ? 'animate-spin' : ''} />
+              <span>Refresh</span>
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '6px 12px', borderRadius: '8px', color: '#34D399', fontSize: '12px', fontWeight: '700' }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+              Live Sync Active
+            </div>
           </div>
+        </div>
+
+        {/* Mobile Horizontal Channel Switcher (shown on smaller screens) */}
+        <div
+          className="mobile-channel-pills"
+          style={{
+            display: 'flex',
+            gap: '8px',
+            overflowX: 'auto',
+            paddingBottom: '4px',
+            flexShrink: 0
+          }}
+        >
+          {rooms.map((room) => {
+            const isActive = activeRoom?.id === room.id;
+            return (
+              <button
+                key={room.id}
+                onClick={() => {
+                  setActiveRoom(room);
+                  setSearchParams({ room: room.slug });
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  background: isActive ? 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)' : 'rgba(15, 23, 42, 0.7)',
+                  border: isActive ? '1px solid #7C3AED' : '1px solid rgba(255, 255, 255, 0.08)',
+                  color: isActive ? '#FFFFFF' : '#94A3B8',
+                  fontSize: '12px',
+                  fontWeight: isActive ? '700' : '600',
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {renderRoomIcon(room.icon, isActive ? '#FFFFFF' : '#94A3B8', 13)}
+                <span>{room.name}</span>
+                {room.messageCount > 0 && (
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.08)',
+                      padding: '1px 6px',
+                      borderRadius: '10px'
+                    }}
+                  >
+                    {room.messageCount}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Main Chat Layout: Left Room Rail + Right Messages Panel */}
         <div
           style={{
             flex: 1,
+            minHeight: 0,
             background: 'rgba(15, 23, 42, 0.65)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '20px',
+            borderRadius: '16px',
             display: 'grid',
             gridTemplateColumns: '260px 1fr',
             overflow: 'hidden'
@@ -153,16 +284,17 @@ export const StudentChatPage = () => {
               background: 'rgba(11, 16, 32, 0.85)',
               borderRight: '1px solid rgba(255, 255, 255, 0.08)',
               display: 'flex',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              minHeight: 0
             }}
           >
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
               <span style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: '#94A3B8', letterSpacing: '0.04em' }}>
                 Study Rooms ({rooms.length})
               </span>
             </div>
 
-            <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
               {rooms.map((room) => {
                 const isActive = activeRoom?.id === room.id;
                 return (
@@ -177,21 +309,37 @@ export const StudentChatPage = () => {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '10px',
-                      padding: '10px 14px',
-                      borderRadius: '12px',
-                      background: isActive ? 'linear-gradient(135deg, rgba(124, 58, 237, 0.3) 0%, rgba(6, 182, 212, 0.2) 100%)' : 'transparent',
+                      padding: '10px 12px',
+                      borderRadius: '10px',
+                      background: isActive ? 'linear-gradient(135deg, rgba(124, 58, 237, 0.25) 0%, rgba(6, 182, 212, 0.15) 100%)' : 'transparent',
                       border: isActive ? '1px solid rgba(124, 58, 237, 0.4)' : '1px solid transparent',
                       color: isActive ? '#FFFFFF' : '#94A3B8',
                       fontSize: '13px',
-                      fontWeight: isActive ? '700' : '600',
+                      fontWeight: isActive ? '700' : '500',
                       cursor: 'pointer',
                       textAlign: 'left',
                       marginBottom: '4px',
                       transition: 'all 0.15s ease'
                     }}
                   >
-                    <Hash size={16} color={isActive ? '#38BDF8' : '#64748B'} />
-                    <span style={{ flex: 1 }}>{room.name}</span>
+                    {renderRoomIcon(room.icon, isActive ? '#38BDF8' : '#64748B', 15)}
+                    <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {room.name}
+                    </span>
+                    {room.messageCount > 0 && (
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          color: isActive ? '#38BDF8' : '#64748B',
+                          background: isActive ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                          padding: '2px 7px',
+                          borderRadius: '8px',
+                          fontWeight: '700'
+                        }}
+                      >
+                        {room.messageCount}
+                      </span>
+                    )}
                   </button>
                 );
               })}
@@ -204,40 +352,124 @@ export const StudentChatPage = () => {
             {/* Active Room Header */}
             <div
               style={{
-                padding: '14px 24px',
+                padding: '12px 20px',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                background: 'rgba(15, 23, 42, 0.8)',
+                background: 'rgba(15, 23, 42, 0.85)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                flexShrink: 0
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Hash size={18} color="#38BDF8" />
-                <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#F8FAFC', margin: 0 }}>
-                  {activeRoom?.name || 'Discussion Room'}
-                </h3>
-                <span style={{ fontSize: '12px', color: '#64748B', marginLeft: '6px' }}>
-                  {activeRoom?.description}
-                </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    background: 'rgba(56, 189, 248, 0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {renderRoomIcon(activeRoom?.icon, '#38BDF8', 16)}
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '15px', fontWeight: '800', color: '#F8FAFC', margin: 0 }}>
+                    {activeRoom?.name || 'General Discussions'}
+                  </h3>
+                  <p style={{ fontSize: '12px', color: '#64748B', margin: '2px 0 0' }}>
+                    {activeRoom?.description || 'VTU peer academic forum'}
+                  </p>
+                </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#94A3B8' }}>
-                <Users size={14} />
-                <span>VTU Community</span>
+                <Users size={14} color="#38BDF8" />
+                <span>{messages.length} messages</span>
               </div>
             </div>
 
             {/* Message Feed */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {messages.length === 0 ? (
+            <div
+              style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
+                minHeight: 0
+              }}
+            >
+              {loadingMessages ? (
                 <div style={{ padding: '60px', textAlign: 'center', color: '#64748B' }}>
-                  <MessageSquare size={40} color="#334155" style={{ marginBottom: '10px' }} />
-                  <p style={{ margin: 0, fontSize: '13px' }}>No messages yet in this room. Be the first to start the discussion!</p>
+                  <RefreshCw size={28} className="animate-spin" color="#38BDF8" style={{ marginBottom: '10px' }} />
+                  <p style={{ margin: 0, fontSize: '13px' }}>Loading discussion messages...</p>
+                </div>
+              ) : messages.length === 0 ? (
+                <div style={{ padding: '40px 20px', textAlign: 'center', color: '#64748B' }}>
+                  <div
+                    style={{
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: '50%',
+                      background: 'rgba(56, 189, 248, 0.1)',
+                      margin: '0 auto 12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <MessageSquare size={26} color="#38BDF8" />
+                  </div>
+                  <h4 style={{ fontSize: '15px', fontWeight: '700', color: '#F8FAFC', margin: '0 0 6px' }}>
+                    Start the conversation in #{activeRoom?.name}
+                  </h4>
+                  <p style={{ margin: '0 0 16px', fontSize: '13px', maxWidth: '380px', marginInline: 'auto' }}>
+                    Ask questions, share syllabus pointers, or discuss exam strategies with students across VTU colleges.
+                  </p>
+
+                  <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <button
+                      onClick={() => handleQuickPrompt('Could someone share key questions for 6th sem internals?')}
+                      style={{
+                        padding: '6px 12px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '20px',
+                        color: '#CBD5E1',
+                        fontSize: '12px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      💡 Key questions for internals?
+                    </button>
+                    <button
+                      onClick={() => handleQuickPrompt('Where can I find the 2022 Scheme model question paper solution?')}
+                      style={{
+                        padding: '6px 12px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '20px',
+                        color: '#CBD5E1',
+                        fontSize: '12px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      📄 Model question papers?
+                    </button>
+                  </div>
                 </div>
               ) : (
                 messages.map((msg) => {
-                  const isMine = msg.userId === user?.id;
+                  const isMine = Number(msg.userId) === Number(currentUserId);
+                  const isModerator = (msg.userRole || '').toUpperCase() === 'ADMIN';
+                  const messageText = msg.content || msg.message || '';
+                  const timeFormatted = msg.createdAt
+                    ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    : 'Just now';
 
                   return (
                     <div
@@ -248,12 +480,67 @@ export const StudentChatPage = () => {
                         alignItems: isMine ? 'flex-end' : 'flex-start'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', fontSize: '11px', color: '#64748B' }}>
-                        <strong style={{ color: isMine ? '#38BDF8' : '#A78BFA' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          marginBottom: '4px',
+                          fontSize: '11px',
+                          color: '#64748B'
+                        }}
+                      >
+                        {/* Avatar */}
+                        {msg.userAvatar ? (
+                          <img
+                            src={msg.userAvatar}
+                            alt=""
+                            style={{ width: '18px', height: '18px', borderRadius: '50%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              background: isMine ? '#7C3AED' : '#0EA5E9',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '9px',
+                              fontWeight: '700',
+                              color: '#FFFFFF'
+                            }}
+                          >
+                            {(msg.userName || 'S').charAt(0).toUpperCase()}
+                          </div>
+                        )}
+
+                        <strong style={{ color: isMine ? '#38BDF8' : isModerator ? '#F59E0B' : '#A78BFA' }}>
                           {isMine ? 'You' : msg.userName || 'Student'}
                         </strong>
+
+                        {isModerator && (
+                          <span
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '2px',
+                              fontSize: '9px',
+                              fontWeight: '800',
+                              background: 'rgba(245, 158, 11, 0.15)',
+                              color: '#FBBF24',
+                              border: '1px solid rgba(245, 158, 11, 0.3)',
+                              padding: '1px 5px',
+                              borderRadius: '4px'
+                            }}
+                          >
+                            <ShieldCheck size={10} /> ADMIN
+                          </span>
+                        )}
+
                         <span>•</span>
-                        <span>{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span>{timeFormatted}</span>
 
                         {!isMine && (
                           <button
@@ -263,9 +550,10 @@ export const StudentChatPage = () => {
                               border: 'none',
                               color: '#64748B',
                               cursor: 'pointer',
-                              padding: '2px',
+                              padding: '2px 4px',
                               display: 'flex',
-                              alignItems: 'center'
+                              alignItems: 'center',
+                              borderRadius: '4px'
                             }}
                             title="Report message"
                           >
@@ -277,11 +565,11 @@ export const StudentChatPage = () => {
                       <div
                         style={{
                           maxWidth: '75%',
-                          padding: '12px 16px',
-                          borderRadius: '16px',
+                          padding: '10px 15px',
+                          borderRadius: isMine ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
                           background: isMine
                             ? 'linear-gradient(135deg, #7C3AED 0%, #6366F1 100%)'
-                            : 'rgba(30, 41, 59, 0.7)',
+                            : 'rgba(30, 41, 59, 0.75)',
                           border: isMine ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
                           color: '#FFFFFF',
                           fontSize: '13px',
@@ -290,7 +578,7 @@ export const StudentChatPage = () => {
                           boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
                         }}
                       >
-                        {msg.content}
+                        {messageText}
                       </div>
                     </div>
                   );
@@ -303,24 +591,25 @@ export const StudentChatPage = () => {
             <form
               onSubmit={handleSendMessage}
               style={{
-                padding: '16px 20px',
+                padding: '14px 20px',
                 borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                background: 'rgba(11, 16, 32, 0.7)',
+                background: 'rgba(11, 16, 32, 0.75)',
                 display: 'flex',
-                gap: '12px'
+                gap: '10px',
+                flexShrink: 0
               }}
             >
               <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                placeholder={`Message #${activeRoom?.name || 'room'}...`}
+                placeholder={`Message #${activeRoom?.name || 'discussion'}...`}
                 style={{
                   flex: 1,
                   background: 'rgba(15, 23, 42, 0.9)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: '12px',
-                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
                   color: '#FFFFFF',
                   fontSize: '13px',
                   outline: 'none'
@@ -330,20 +619,24 @@ export const StudentChatPage = () => {
                 type="submit"
                 disabled={sending || !newMessage.trim()}
                 style={{
-                  background: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)',
+                  background: (!newMessage.trim() || sending)
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)',
                   border: 'none',
-                  borderRadius: '12px',
-                  padding: '0 20px',
+                  borderRadius: '10px',
+                  padding: '0 18px',
                   color: '#FFFFFF',
                   fontSize: '13px',
                   fontWeight: '700',
-                  cursor: 'pointer',
+                  cursor: (!newMessage.trim() || sending) ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px'
+                  gap: '6px',
+                  opacity: (!newMessage.trim() || sending) ? 0.6 : 1,
+                  transition: 'all 0.15s ease'
                 }}
               >
-                <Send size={15} /> Send
+                <Send size={14} /> {sending ? 'Posting...' : 'Send'}
               </button>
             </form>
 
@@ -373,13 +666,13 @@ export const StudentChatPage = () => {
                 maxWidth: '440px',
                 background: '#0F172A',
                 border: '1px solid rgba(239, 68, 68, 0.4)',
-                borderRadius: '20px',
-                padding: '24px'
+                borderRadius: '16px',
+                padding: '22px'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#F87171', marginBottom: '12px' }}>
                 <AlertTriangle size={20} />
-                <h3 style={{ fontSize: '18px', fontWeight: '800', margin: 0 }}>Report Message</h3>
+                <h3 style={{ fontSize: '17px', fontWeight: '800', margin: 0 }}>Report Message</h3>
               </div>
 
               {reportDone ? (
@@ -394,7 +687,7 @@ export const StudentChatPage = () => {
                   </p>
 
                   <div style={{ padding: '10px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px', fontSize: '12px', color: '#CBD5E1' }}>
-                    "{reportTarget.content}"
+                    "{reportTarget.content || reportTarget.message}"
                   </div>
 
                   <textarea

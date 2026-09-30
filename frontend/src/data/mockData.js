@@ -803,3 +803,216 @@ export const MOCK_ADMIN_STATS = {
     { id: 'mod_3', title: 'Off-Campus Drive Scam Alert: Cognizant Impersonation', author: 'Placement Cell', type: 'Announcement', date: 'Yesterday', status: 'Verified' }
   ]
 };
+
+export const DEFAULT_CHAT_ROOMS = [
+  {
+    id: 1,
+    name: 'General Discussions',
+    slug: 'general',
+    description: 'VTU academic circulars, campus updates, timetable discussions, and general peer chatter.',
+    icon: 'MessageSquare',
+    active: true,
+    messageCount: 3
+  },
+  {
+    id: 2,
+    name: 'Java & Full-Stack',
+    slug: 'java',
+    description: 'Core Java, Servlets, Spring Boot, React, and backend architecture debates & debugging.',
+    icon: 'Code',
+    active: true,
+    messageCount: 5
+  },
+  {
+    id: 3,
+    name: 'SQL & Databases',
+    slug: 'sql',
+    description: 'Relational database schema design, SQL queries, normalization, indexing, and NoSQL engines.',
+    icon: 'Database',
+    active: true,
+    messageCount: 2
+  },
+  {
+    id: 4,
+    name: 'React & Modern Frontend',
+    slug: 'react',
+    description: 'Component design patterns, React hooks, state management, Vite, and CSS styling.',
+    icon: 'Layers',
+    active: true,
+    messageCount: 2
+  },
+  {
+    id: 5,
+    name: 'DBMS & System Design',
+    slug: 'dbms',
+    description: 'VTU 5th/6th sem DBMS syllabus, transactions, ACID properties, and scaling concepts.',
+    icon: 'Server',
+    active: true,
+    messageCount: 2
+  },
+  {
+    id: 6,
+    name: 'Placements & Career Connect',
+    slug: 'placements',
+    description: 'Interview questions, referral requests, resume critiques, and placement drive updates.',
+    icon: 'Briefcase',
+    active: true,
+    messageCount: 3
+  },
+  {
+    id: 7,
+    name: 'Academic Doubts & Syllabus Help',
+    slug: 'doubts',
+    description: 'Ask syllabus-related doubts, question paper solutions, and previous SEE exam queries.',
+    icon: 'HelpCircle',
+    active: true,
+    messageCount: 4
+  }
+];
+
+export const DEFAULT_CHAT_MESSAGES = [
+  {
+    id: 1,
+    roomId: 1,
+    userId: 1,
+    userName: 'VTU Central Admin',
+    userRole: 'ADMIN',
+    userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    message: 'Welcome everyone to VTU Student Connect! Official verified notes and question banks for Semester 1 to 8 are live.',
+    content: 'Welcome everyone to VTU Student Connect! Official verified notes and question banks for Semester 1 to 8 are live.',
+    isQuestion: false,
+    replyToId: null,
+    createdAt: '2026-09-20T10:00:00.000Z'
+  },
+  {
+    id: 2,
+    roomId: 1,
+    userId: 2,
+    userName: 'Aarav Sharma',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+    message: 'Thanks sir! The Cloud Computing BCS601 module notes are exceptionally well-structured.',
+    content: 'Thanks sir! The Cloud Computing BCS601 module notes are exceptionally well-structured.',
+    isQuestion: false,
+    replyToId: 1,
+    createdAt: '2026-09-20T10:15:00.000Z'
+  },
+  {
+    id: 3,
+    roomId: 1,
+    userId: 3,
+    userName: 'Priya Rao',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+    message: 'Are the 2022 Scheme model question papers updated for 6th sem Web Tech?',
+    content: 'Are the 2022 Scheme model question papers updated for 6th sem Web Tech?',
+    isQuestion: true,
+    replyToId: null,
+    createdAt: '2026-09-21T09:20:00.000Z'
+  },
+  {
+    id: 4,
+    roomId: 2,
+    userId: 2,
+    userName: 'Aarav Sharma',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+    message: 'Hey folks, what is the best practice for connection pooling in a Jakarta Servlet + JDBC architecture without Spring Boot?',
+    content: 'Hey folks, what is the best practice for connection pooling in a Jakarta Servlet + JDBC architecture without Spring Boot?',
+    isQuestion: true,
+    replyToId: null,
+    createdAt: '2026-09-21T14:00:00.000Z'
+  },
+  {
+    id: 5,
+    roomId: 2,
+    userId: 3,
+    userName: 'Priya Rao',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+    message: 'Use HikariCP or an Apache DBCP DataSource configured via context.xml or static singleton in DBConnection utility!',
+    content: 'Use HikariCP or an Apache DBCP DataSource configured via context.xml or static singleton in DBConnection utility!',
+    isQuestion: false,
+    replyToId: 4,
+    createdAt: '2026-09-21T14:10:00.000Z'
+  },
+  {
+    id: 6,
+    roomId: 3,
+    userId: 3,
+    userName: 'Priya Rao',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+    message: 'Make sure to add foreign key constraints with ON DELETE CASCADE carefully in MySQL InnoDB tables.',
+    content: 'Make sure to add foreign key constraints with ON DELETE CASCADE carefully in MySQL InnoDB tables.',
+    isQuestion: false,
+    replyToId: null,
+    createdAt: '2026-09-22T11:00:00.000Z'
+  },
+  {
+    id: 7,
+    roomId: 4,
+    userId: 2,
+    userName: 'Aarav Sharma',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+    message: 'Anyone deploying Vite React apps to Vercel: remember to configure rewrites in vercel.json for client-side routing!',
+    content: 'Anyone deploying Vite React apps to Vercel: remember to configure rewrites in vercel.json for client-side routing!',
+    isQuestion: false,
+    replyToId: null,
+    createdAt: '2026-09-22T13:45:00.000Z'
+  },
+  {
+    id: 8,
+    roomId: 5,
+    userId: 1,
+    userName: 'VTU Central Admin',
+    userRole: 'ADMIN',
+    userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    message: 'For DBMS Unit 4 transactions: B+ Tree index structures and 2-Phase Locking (2PL) are vital 10-mark topics.',
+    content: 'For DBMS Unit 4 transactions: B+ Tree index structures and 2-Phase Locking (2PL) are vital 10-mark topics.',
+    isQuestion: false,
+    replyToId: null,
+    createdAt: '2026-09-22T16:30:00.000Z'
+  },
+  {
+    id: 9,
+    roomId: 6,
+    userId: 3,
+    userName: 'Priya Rao',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+    message: 'Google SWE Intern applications for 2026 batch are now open on the Placements tab. Check eligibility and apply before Oct 31!',
+    content: 'Google SWE Intern applications for 2026 batch are now open on the Placements tab. Check eligibility and apply before Oct 31!',
+    isQuestion: false,
+    replyToId: null,
+    createdAt: '2026-09-23T09:30:00.000Z'
+  },
+  {
+    id: 10,
+    roomId: 7,
+    userId: 2,
+    userName: 'Aarav Sharma',
+    userRole: 'STUDENT',
+    userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+    message: 'In Cloud Computing Unit 1, is Type-1 hypervisor vs Type-2 hypervisor usually asked for 5 marks or 10 marks in SEE?',
+    content: 'In Cloud Computing Unit 1, is Type-1 hypervisor vs Type-2 hypervisor usually asked for 5 marks or 10 marks in SEE?',
+    isQuestion: true,
+    replyToId: null,
+    createdAt: '2026-09-23T16:20:00.000Z'
+  },
+  {
+    id: 11,
+    roomId: 7,
+    userId: 1,
+    userName: 'VTU Central Admin',
+    userRole: 'ADMIN',
+    userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    message: 'It is frequently asked as a 5-mark question in Module 1, often accompanied by architecture block diagrams.',
+    content: 'It is frequently asked as a 5-mark question in Module 1, often accompanied by architecture block diagrams.',
+    isQuestion: false,
+    replyToId: 10,
+    createdAt: '2026-09-23T17:00:00.000Z'
+  }
+];
+

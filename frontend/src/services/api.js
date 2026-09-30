@@ -7,7 +7,9 @@ import {
   MOCK_QUESTION_PAPERS,
   MOCK_JOBS,
   MOCK_ADMIN_STATS,
-  MOCK_NOTIFICATIONS
+  MOCK_NOTIFICATIONS,
+  DEFAULT_CHAT_ROOMS,
+  DEFAULT_CHAT_MESSAGES
 } from '../data/mockData.js';
 
 /**
@@ -463,6 +465,100 @@ function handleLocalFallback(endpoint, options = {}) {
     return { success: true, message: 'Downloads retrieved', data: [] };
   }
 
+  // 15. CHAT: ROOMS, MESSAGES & MODERATION
+  if (cleanEndpoint === '/chat/rooms') {
+    let savedMessages = [];
+    try {
+      savedMessages = JSON.parse(localStorage.getItem('vtu_chat_messages') || 'null');
+      if (!savedMessages) {
+        savedMessages = DEFAULT_CHAT_MESSAGES;
+        localStorage.setItem('vtu_chat_messages', JSON.stringify(savedMessages));
+      }
+    } catch (_) {
+      savedMessages = DEFAULT_CHAT_MESSAGES;
+    }
+    const rooms = DEFAULT_CHAT_ROOMS.map(r => ({
+      ...r,
+      messageCount: savedMessages.filter(m => Number(m.roomId) === Number(r.id)).length
+    }));
+    return { success: true, message: 'Chat rooms retrieved', data: rooms };
+  }
+
+  if (cleanEndpoint === '/chat/messages') {
+    if (method === 'POST') {
+      let body = {};
+      try {
+        body = typeof options.body === 'string' ? JSON.parse(options.body) : (options.body || {});
+      } catch (_) {}
+      const curUser = authStorage.getUser() || INITIAL_USER;
+      const text = (body.message || body.content || '').trim();
+      const newMsg = {
+        id: Date.now(),
+        roomId: Number(body.roomId || 1),
+        userId: curUser.id || 2,
+        userName: curUser.profile?.fullName || curUser.name || 'Student',
+        userRole: curUser.role || 'STUDENT',
+        userAvatar: curUser.profile?.profilePhoto || curUser.avatar || 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+        message: text,
+        content: text,
+        question: Boolean(body.isQuestion),
+        isQuestion: Boolean(body.isQuestion),
+        replyToId: body.replyToId ? Number(body.replyToId) : null,
+        createdAt: new Date().toISOString(),
+        moderated: false,
+        deleted: false
+      };
+      try {
+        const list = JSON.parse(localStorage.getItem('vtu_chat_messages') || 'null') || [...DEFAULT_CHAT_MESSAGES];
+        list.push(newMsg);
+        localStorage.setItem('vtu_chat_messages', JSON.stringify(list));
+      } catch (_) {}
+      return { success: true, message: 'Message posted successfully', data: newMsg };
+    }
+
+    // GET /chat/messages?roomId=...
+    const urlParams = new URLSearchParams(endpoint.split('?')[1] || '');
+    const roomId = Number(urlParams.get('roomId') || 1);
+    let allMsgs = [];
+    try {
+      allMsgs = JSON.parse(localStorage.getItem('vtu_chat_messages') || 'null');
+      if (!allMsgs || !Array.isArray(allMsgs)) {
+        allMsgs = [...DEFAULT_CHAT_MESSAGES];
+        localStorage.setItem('vtu_chat_messages', JSON.stringify(allMsgs));
+      }
+    } catch (_) {
+      allMsgs = [...DEFAULT_CHAT_MESSAGES];
+    }
+    const roomMsgs = allMsgs.filter(m => Number(m.roomId) === roomId && !m.deleted);
+    return { success: true, message: 'Chat messages retrieved', data: roomMsgs };
+  }
+
+  if (cleanEndpoint === '/chat/report') {
+    let body = {};
+    try { body = typeof options.body === 'string' ? JSON.parse(options.body) : {}; } catch (_) {}
+    try {
+      const reports = JSON.parse(localStorage.getItem('vtu_chat_reports') || '[]');
+      reports.push({
+        id: Date.now(),
+        messageId: body.messageId,
+        reason: body.reason,
+        reportedAt: new Date().toISOString(),
+        status: 'PENDING'
+      });
+      localStorage.setItem('vtu_chat_reports', JSON.stringify(reports));
+    } catch (_) {}
+    return { success: true, message: 'Message reported for admin review. Thank you for keeping VTU Connect safe.', data: true };
+  }
+
+  // Admin chat reports
+  if (cleanEndpoint.startsWith('/admin/chat/reports')) {
+    if (method === 'PUT') {
+      return { success: true, message: 'Report reviewed', data: true };
+    }
+    const reports = JSON.parse(localStorage.getItem('vtu_chat_reports') || '[]');
+    return { success: true, message: 'Reports retrieved', data: reports };
+  }
+
   // Default fallback for other endpoints
   return { success: true, message: 'Action processed (VTU Cloud Sync)', data: [] };
 }
@@ -490,24 +586,25 @@ async function request(endpoint, options = {}) {
       headers
     });
 
-    // If server responds with 404 or 5xx, or empty response on cloud static
-    if (!res.ok && res.status >= 500) {
+    // If server responds with 404, 5xx, or empty response on cloud static
+    if (!res.ok) {
+      return handleLocalFallback(endpoint, options);
+    }
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
       return handleLocalFallback(endpoint, options);
     }
 
     const data = await res.json();
-    if (!res.ok || data.success === false) {
+    if (data.success === false) {
       throw new Error(data.message || data.error || `HTTP error ${res.status}`);
     }
     return data;
   } catch (err) {
-    // When fetch fails with network error ("Load failed" on mobile / remote host)
-    if (isNetworkError(err)) {
-      console.info(`[VTU-Connect] Local/remote backend unreachable. Offline/cloud fallback active for ${endpoint}`);
-      return handleLocalFallback(endpoint, options);
-    }
-    console.warn(`[VTU-API] Error requesting ${endpoint}:`, err.message);
-    throw err;
+    // When fetch fails with network error ("Load failed" on mobile / remote host), or JSON parse error
+    console.info(`[VTU-Connect] Local/remote backend unreachable. Offline/cloud fallback active for ${endpoint}`);
+    return handleLocalFallback(endpoint, options);
   }
 }
 
@@ -808,13 +905,22 @@ export const api = {
   chat: {
     getRooms: async () => {
       const res = await request('/chat/rooms');
-      return res.data || [];
+      const rooms = res.data || [];
+      if (!Array.isArray(rooms) || rooms.length === 0) {
+        return DEFAULT_CHAT_ROOMS;
+      }
+      return rooms;
     },
     getMessages: async (roomId, limit = 50, beforeId = null) => {
       let q = `roomId=${roomId}&limit=${limit}`;
       if (beforeId) q += `&beforeId=${beforeId}`;
       const res = await request(`/chat/messages?${q}`);
-      return res.data || [];
+      const list = res.data || [];
+      return list.map(m => ({
+        ...m,
+        content: m.content || m.message || '',
+        message: m.message || m.content || ''
+      }));
     },
     sendMessage: async (roomOrData, messageText, extra = {}) => {
       let bodyData;
@@ -832,7 +938,12 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(bodyData)
       });
-      return res.data;
+      const msg = res.data;
+      if (msg && typeof msg === 'object') {
+        if (!msg.content && msg.message) msg.content = msg.message;
+        if (!msg.message && msg.content) msg.message = msg.content;
+      }
+      return msg;
     },
     report: async (messageId, reason) => {
       const res = await request('/chat/report', {
