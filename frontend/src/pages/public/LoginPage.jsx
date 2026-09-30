@@ -276,69 +276,6 @@ export const LoginPage = () => {
             </div>
           )}
 
-          {/* Quick Demo Credentials Bar for Easy Mobile Access */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              marginBottom: '16px',
-              flexWrap: 'wrap'
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('student@vtuconnect.in');
-                setPassword('Student@123');
-                setError('');
-              }}
-              style={{
-                flex: 1,
-                minWidth: '130px',
-                padding: '9px 12px',
-                borderRadius: '9px',
-                background: 'rgba(56, 189, 248, 0.12)',
-                border: '1px solid rgba(56, 189, 248, 0.35)',
-                color: '#38BDF8',
-                fontSize: '12px',
-                fontWeight: '700',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px'
-              }}
-            >
-              <User size={13} /> ⚡ Student Demo
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('admin@vtuconnect.in');
-                setPassword('Admin@123');
-                setError('');
-              }}
-              style={{
-                flex: 1,
-                minWidth: '130px',
-                padding: '9px 12px',
-                borderRadius: '9px',
-                background: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid rgba(239, 68, 68, 0.35)',
-                color: '#F87171',
-                fontSize: '12px',
-                fontWeight: '700',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px'
-              }}
-            >
-              <Shield size={13} /> 👑 Admin Demo
-            </button>
-          </div>
-
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Email / USN */}
             <div>
